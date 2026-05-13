@@ -1,0 +1,36 @@
+modules = ["nodejs-24"]
+
+  [[artifacts]]
+  id = "artifacts/api-server"
+
+  [[artifacts]]
+  id = "artifacts/mockup-sandbox"
+
+  [deployment]
+  deploymentTarget = "vm"
+  build = ["bash", "scripts/build-production.sh"]
+  run = ["node", "artifacts/api-server/dist/index.cjs"]
+
+  [deployment.postBuild]
+  args = ["pnpm", "store", "prune"]
+  env = { "CI" = "true" }
+
+  [workflows]
+  runButton = "Project"
+
+  [agent]
+  stack = "PNPM_WORKSPACE"
+expertMode = true
+
+  [postMerge]
+  path = "scripts/post-merge.sh"
+  timeoutMs = 20000
+
+[nix]
+packages = ["haskellPackages.heidi"]
+
+[userenv]
+
+[userenv.shared]
+EXPO_TOKEN = "g2VrpRYfqdaYILdjZP6bIiqKQerCB2wQ-XKYVjnF"
+  
